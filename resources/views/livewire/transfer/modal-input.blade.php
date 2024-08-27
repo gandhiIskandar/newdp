@@ -45,15 +45,15 @@
                         </select>
                     </div>
 
-                    @if(!$isTTAtas)
+                    
                     <label class="form-label" for="amount">Jumlah</label>
                     <div class="input-group mb-3">
                         <span class="input-group-text">Rp</span>
                         <input type="text" id="amount_input" wire:model='form.amount'
-                            class="form-control" aria-label="Amount (to the nearest dollar)" required />
+                            class="form-control input-currency" aria-label="Amount (to the nearest dollar)" required />
 
                     </div>
-                    @endif
+                   
 
                       
 
@@ -78,6 +78,12 @@
             $wire.on('showModalTransferJS', (data) => {
 
                 $('#modalTransfer').modal('show');
+
+                if(data.amount != null){
+                        //gunakan ini agar mencegah bug ketika pakai wire:model value kembali 0 saat edit state
+                    AutoNumeric.set('#amount_input', data.amount);
+                 }
+                
 
 
             });

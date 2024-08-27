@@ -27,13 +27,17 @@ if (! function_exists('updateSaldoRekeningAdmin')) {
 
 if (! function_exists('insertLog')) {
 
-    function insertLog($username, $ip, $activity, $target, $deskripsi, $key)
+    function insertLog($username, $ip, $activity, $target, $deskripsi, $key, $website_id = null)
     {
+        if($website_id == null){
+            $website_id = session('website_id');
+        }
+        
 
         $data = [
             'username' => $username,
             'ip' => $ip,
-            'website_id' => session('website_id'),
+            'website_id' => $website_id,
             'activity' => $activity,
             'deskripsi' => $deskripsi,
 

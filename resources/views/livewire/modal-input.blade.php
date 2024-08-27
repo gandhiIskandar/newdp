@@ -151,10 +151,10 @@
                 
                 $('#animateModal').modal('show');
 
-                // if(data.amount != null){
-                //         //gunakan ini agar mencegah bug ketika pakai wire:model value kembali 0 saat edit state
-                //     AutoNumeric.set('#amount_input', data.amount);
-                // }
+                 if(data.amount != null){
+                        //gunakan ini agar mencegah bug ketika pakai wire:model value kembali 0 saat edit state
+                    AutoNumeric.set('#amount_input', data.amount);
+                 }
                 
 
             });

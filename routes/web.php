@@ -45,6 +45,7 @@ Route::middleware('whitelist')->group(function () {
 
             Route::get('/tt-atas', \App\Livewire\Transfer\Index::class)->name('tt-atas');
             Route::get('/pinjam-atas', \App\Livewire\Transfer\Index::class)->name('pinjam-atas');
+            Route::get('/log-transfer', \App\Livewire\Log\Index::class)->name('log-transfer');
         });
 
         Route::middleware('website3')->group(function(){

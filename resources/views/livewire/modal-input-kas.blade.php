@@ -33,6 +33,14 @@
 
                     </div>
 
+                    <label class="form-label" for="note">Note(Opsional)</label>
+                    <div class="input-group mb-3">
+                        
+                        <input type="text" id="note" wire:model='form.note' class="form-control input-currency"
+                            aria-label="Amount (to the nearest dollar)" required />
+
+                    </div>
+
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>

@@ -43,7 +43,7 @@
                     </div>
                     <label class="form-label" for="amount">Jumlah</label>
                     <div class="input-group mb-3">
-                        <select class="form-select" style="max-width: 100px" wire:model='form.currency_id' id="exampleFormControlSelect2" required>
+                        <select class="form-select" style="max-width: 100px" wire:model.change='form.currency_id' id="exampleFormControlSelect2" required>
                            
                             @foreach ($currencies as $currency)
                             <option value={{ $currency->id }} {{ $loop->iteration == 1 ? 'selected' : '' }} >{{ $currency->name }}</option>
@@ -52,11 +52,16 @@
                             
 
                         </select>
-                        <input type="text" id="amount" wire:model='form.amount' class="form-control input-currency"
+                        <input type="text" id="amount_input"  wire:loading.attr="disabled"  wire:model.live.debounce.500ms='form.amount' class="form-control input-currency"
                             aria-label="Amount (to the nearest dollar)" required />
-
-                    </div>
-
+                            
+                        </div>
+                        <div wire:loading.block wire:target="form.amount">
+                            <small id="value" class="form-text">Calculating...</small>
+                        </div>
+                        @if($form->valueIDR != 0)
+                        <small id="value" class="form-text">{{ toRupiah($form->valueIDR, true) }}</small>
+                        @endif
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
@@ -76,6 +81,11 @@
                 $wire.on('showModalExpJS', (data) => {
 
                     $('#modalExp').modal('show');
+
+                    if(data.amount != 0){
+                        //gunakan ini agar mencegah bug ketika pakai wire:model value kembali 0 saat edit state
+                    AutoNumeric.set('#amount_input', data.amount);
+                 }
 
 
                 });

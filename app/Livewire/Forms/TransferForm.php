@@ -2,7 +2,8 @@
 
 namespace App\Livewire\Forms;
 
-use App\Models\Account;
+use App\Models\Account; 
+use App\Models\Website; 
 use App\Models\Transfer;
 use Livewire\Attributes\Rule;
 use Livewire\Form;
@@ -18,6 +19,7 @@ class TransferForm extends Form
     #[Rule(['required'])]
     public $account_tt_id;
 
+    #[Rule(['required'])]
     public $amount;
 
     public function insert($isTTAtas)
@@ -27,7 +29,7 @@ class TransferForm extends Form
 
             if ($isTTAtas) {
 
-                $this->getBalanceAccountWeb();
+               $this->reduceBalanceAccountWeb();
 
                 $this->transferTTAtas();
             } else {
@@ -47,16 +49,30 @@ class TransferForm extends Form
                 'tt_atas' => $isTTAtas,
             ]);
 
-            $this->reset();
+            $accounts = Account::with('bank')->whereIn('id',[$this->account_id, $this->account_tt_id])->get();
 
+            
+          
+
+            $accountWebsite = $accounts->where('id', $this->account_id)->first();
+            $accountTTAtas = $accounts->where('id', $this->account_tt_id)->first();
+
+            
+            $detail = $accountTTAtas->bank->name."($accountTTAtas->under_name)". " ke ".$accountWebsite->bank->name."($accountWebsite->under_name)";   
             $keterangan = "Tambah Pinjam Atas";
             if($isTTAtas){
+                $detail = $accountWebsite->bank->name."($accountWebsite->under_name)". " ke ".$accountTTAtas->bank->name."($accountTTAtas->under_name)";
                 $keterangan = "Tambah TT Atas";
             }
             $user = auth()->user();
-
-            insertLog($user->name, request()->ip(), "Tambah Transfer", $transfer->website->name, $keterangan,2);
-
+            
+            insertLog($user->name, request()->ip(), $keterangan, $transfer->website->name, $detail,2);
+            
+            //insert log ke website yang bersangkutan
+            insertLog($user->name, request()->ip(), $keterangan, $transfer->website->name, $detail." ".toRupiah($transfer->amount,true),2,$this->website_id);
+            //end
+            $this->reset();
+            
             flash('Transfer Berhasil', 'alert-success');
         } else {
             flash('Mohon lengkapi data', 'alert-danger');
@@ -91,15 +107,16 @@ class TransferForm extends Form
         $account->save();
     }
 
-    public function getBalanceAccountWeb()
+    public function reduceBalanceAccountWeb()
     {
 
         $account = Account::where('id', $this->account_id)->first();
 
-        $this->amount = $account->balance;
-
-        $account->balance = 0;
+        $account->balance -= $this->amount;
 
         $account->save();
     }
+
+   
+        
 }

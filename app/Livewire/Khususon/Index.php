@@ -6,9 +6,10 @@ use App\Models\Task;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Route;
+
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -37,6 +38,8 @@ class Index extends Component
 
         // dd(Route::current());
 
+        // dd($this->getWebSummary());
+
         $this->getStat();
         $this->getTodoList();
         $this->proccessDataStats();
@@ -47,10 +50,13 @@ class Index extends Component
     #[\Livewire\Attributes\On('reloadTransaction')]
     public function getStat()
     {
-
-        $totals = DB::table('transactions')
+        $db = DB::table('transactions');
+        if (session('website_id') != 6) {
+            $db->where('website_id', session('website_id'));
+        }
+        $totals = $db
             ->whereDate('created_at', Carbon::today())
-            ->where('website_id', session('website_id'))
+
             ->selectRaw('
             SUM(CASE WHEN type_id = 1 THEN amount ELSE 0 END) AS total_wd,
             SUM(CASE WHEN type_id = 2 AND new = 0 THEN amount ELSE 0 END) AS total_re_depo,
@@ -62,6 +68,7 @@ class Index extends Component
 
         $this->transactions = Transaction::with(['member', 'type'])->whereDate('created_at', Carbon::today())->where('website_id', session('website_id'))->orderBy('created_at', 'desc')->get();
     }
+
 
     public function getTodoList()
     {
@@ -82,9 +89,12 @@ class Index extends Component
     public function getCurrencyAPI($base, $target)
     { //default = USD
 
-        $response = Http::get("https://api.freecurrencyapi.com/v1/latest?apikey=fca_live_52gDWLXcOQ6eRGarR3sLdQXCg5v2IAyIJj6PoJJb&currencies=$target&base_currency=$base");
+        $response = Cache::remember('currency',120,function()use($base, $target){
+           return Http::get("https://api.freecurrencyapi.com/v1/latest?apikey=fca_live_52gDWLXcOQ6eRGarR3sLdQXCg5v2IAyIJj6PoJJb&currencies=$target&base_currency=$base")->json();
+        }); 
 
-        return $response->json();
+  
+        return $response;
     }
 
     public function proccessDataStats()
@@ -141,12 +151,7 @@ class Index extends Component
     }
 
     public function getCryptoDataAPI()
-    { //0 = bitcoin  //2 = udst
-
-        // $response = Http::withHeaders([
-        //     'x-access-token' => 'coinranking45201113ff20c225f47cdbcb560b86c7631ec70b40120081',
-        //     'Accept' => 'application/json',
-        // ])->get("https://api.coinranking.com/v2/coin/$uuid/price");
+    { 
 
         $response = Http::get('https://api.coinranking.com/v2/coins');
 

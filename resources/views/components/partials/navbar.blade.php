@@ -101,16 +101,16 @@
                         </li>
                     @endif
 
-                    @can('superAdmin')
-                        <li class="pc-item {{ request()->is('users') ? 'active' : '' }}">
+                    {{-- @can('superAdmin')
+                         <li class="pc-item {{ request()->is('users') ? 'active' : '' }}">
                             <a href="/users" class="pc-link">
                                 <span class="pc-micon">
                                     <i class="ph-duotone ph-users"></i>
                                 </span>
                                 <span class="pc-mtext">Users</span>
                             </a>
-                        </li>
-                    @endcan
+                        </li> 
+                    @endcan --}}
 
                     @if (privilegeViewLog())
                         <li class="pc-item {{ request()->is('log') ? 'active' : '' }}">
@@ -163,6 +163,17 @@
                         </li>
                     @endif
 
+                    @if (privilegeViewLog())
+                    <li class="pc-item {{ request()->is('log-transfer') ? 'active' : '' }}">
+                        <a href="/log-transfer" class="pc-link">
+                            <span class="pc-micon">
+                                <i class="ph-duotone ph-activity"></i>
+                            </span>
+                            <span class="pc-mtext">Log</span>
+                        </a>
+                    </li>
+                @endif
+
                     @if (privilegeViewPinjamAtas())
                         <li class="pc-item {{ request()->is('pinjam-atas') ? 'active' : '' }}">
                             <a href="/pinjam-atas" class="pc-link">
@@ -178,7 +189,7 @@
                         <li class="pc-item {{ request()->is('rekening') ? 'active' : '' }}">
                             <a href="/rekening" class="pc-link">
                                 <span class="pc-micon">
-                                    <i class="ph-duotone ph-gauge"></i>
+                                    <i class="ph-duotone ph-bank"></i>
                                 </span>
                                 <span class="pc-mtext">Rekening</span>
                             </a>

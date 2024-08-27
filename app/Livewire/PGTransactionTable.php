@@ -140,15 +140,19 @@ final class PGTransactionTable extends PowerGridComponent
 
     public function filters(): array
     {
+        if(privilegeViewDateTransaction()){
         return [
 
-            Filter::datetimepicker('created_at', 'created_at_formatted')
+            Filter::datetimepicker('created_at_formatted', 'created_at')
                 ->params([
 
                     'timezone' => 'Asia/Jakarta',
 
                 ]),
         ];
+    }
+
+    return [];
     }
 
     public function actions(Transaction $row): array

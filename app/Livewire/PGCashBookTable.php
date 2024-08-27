@@ -52,18 +52,19 @@ final class PGCashBookTable extends PowerGridComponent
 
         //untuk refresh data
         $this->fillData();
-
     }
 
     public function fields(): PowerGridFields
     {
         return PowerGrid::fields()
             ->add('id')
-            ->add('type_id', fn ($cashBook) => $cashBook->type->name)
-            ->add('amount', fn ($cashBook) => toBaht($cashBook->amount))
+            ->add('type_id', fn($cashBook) => $cashBook->type->name)
+            ->add('amount', fn($cashBook) => toBaht($cashBook->amount))
             ->add('detail')
-            ->add('user_id', fn ($cashBook) => $cashBook->user->name)
-            ->add('created_at_formatted', fn ($cashBook) => Carbon::parse($cashBook->created_at)->translatedFormat('d F Y'));
+            ->add('balance', fn($cashBook)=>toBaht($cashBook->balance))
+            ->add('note')
+            ->add('user_id', fn($cashBook) => $cashBook->user->name)
+            ->add('created_at_formatted', fn($cashBook) => Carbon::parse($cashBook->created_at)->translatedFormat('d F Y H:i'));
     }
 
     public function columns(): array
@@ -79,6 +80,9 @@ final class PGCashBookTable extends PowerGridComponent
                 ->sortable()
                 ->searchable()->hidden(isHidden: ! privilegeViewDetailCash(), isForceHidden: false),
 
+                Column::make('Saldo Akhir','balance'),
+                Column::make('Note','note'),
+
             Column::make('User', 'user_id')->hidden(isHidden: ! privilegeViewUserCash(), isForceHidden: false),
             Column::make('Tanggal', 'created_at_formatted', 'created_at')
                 ->sortable()->hidden(isHidden: ! privilegeViewDateCash(), isForceHidden: false),
@@ -93,21 +97,24 @@ final class PGCashBookTable extends PowerGridComponent
 
     public function filters(): array
     {
-        return [
+        if (privilegeViewDateCash()) {
+            return [
 
-            Filter::datetimepicker('created_at','created_at_formatted')
-                ->params([
+                Filter::datetimepicker('created_at_formatted', 'created_at')
+                    ->params([
 
-                    'timezone' => 'Asia/Jakarta',
+                        'timezone' => 'Asia/Jakarta',
 
-                ]),
-        ];
+                    ]),
+            ];
+        }
+        return [];
     }
 
     #[\Livewire\Attributes\On('edit')]
     public function edit($rowId): void
     {
-        $this->js('alert('.$rowId.')');
+        $this->js('alert(' . $rowId . ')');
     }
 
     public function actions(CashBook $row): array
@@ -132,11 +139,11 @@ final class PGCashBookTable extends PowerGridComponent
         return [
             // Hide button edit for ID 1
             Rule::button('edit')
-                ->when(fn () => ! privilegeEditCashBook())
+                ->when(fn() => ! privilegeEditCashBook())
                 ->hide(),
 
             Rule::button('remove')
-                ->when(fn () => ! privilegeRemoveCashBook())
+                ->when(fn() => ! privilegeRemoveCashBook())
                 ->hide(),
         ];
     }

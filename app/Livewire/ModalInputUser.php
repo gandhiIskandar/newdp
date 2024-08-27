@@ -83,9 +83,15 @@ class ModalInputUser extends Component
 
         if (! $this->edit) {
             $this->insertUser();
+            $msg = "Berhasil Tambah User";
         } else {
             $this->updateUser();
+            $msg = "Berhasil Update User";
+            
         }
+
+        
+        $this->dispatch('closeModal', message:$msg)->self();
     }
 
     public function updateUser()
@@ -93,7 +99,7 @@ class ModalInputUser extends Component
 
         $this->form->update($this->user);
 
-        flash('Data user berhasil diupdate', 'alert-success');
+       
 
         $this->dispatch('reloadPowerGridUser');
 
@@ -102,7 +108,7 @@ class ModalInputUser extends Component
     public function insertUser()
     {
 
-        $user = $this->form->create() ?? 'null';
+     $this->form->create();
 
         $this->dispatch('reloadPowerGridUser');
     }

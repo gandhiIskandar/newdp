@@ -14,7 +14,7 @@
                         <i class="ph-duotone ph-list"></i>
                     </a>
                 </li>
-                <li class="dropdown pc-h-item">
+                {{-- <li class="dropdown pc-h-item">
                     <a class="pc-head-link dropdown-toggle arrow-none m-0 trig-drp-search" data-bs-toggle="dropdown"
                         href="#" role="button" aria-haspopup="false" aria-expanded="false">
                         <i class="ph-duotone ph-magnifying-glass"></i>
@@ -28,7 +28,7 @@
                             </div>
                         </form>
                     </div>
-                </li>
+                </li> --}}
             </ul>
         </div>
         <!-- [Mobile Media Block end] -->
@@ -67,11 +67,12 @@
                         <i class="ph-duotone ph-gear"></i>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end pc-h-dropdown">
+                        @can('superAdmin')
                         <a href="/users" class="dropdown-item">
                             <i class="ph-duotone ph-users"></i>
                             <span>Users Setting</span>
                         </a>
-                        @can('superAdmin')
+                        
                             <button data-pc-animate="fade-in-scale" type="button" data-bs-toggle="modal"
                                 data-bs-target="#modalWhitelist" class="dropdown-item" class="dropdown-item">
                                 <i class="ph-duotone ph-sliders"></i>

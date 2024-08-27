@@ -15,6 +15,8 @@ class CashBook extends Model
         'detail',
         'user_id',
         'website_id',
+        'balance', //pendapatan - pengeluaran
+        'note' 
     ];
 
     public function user()

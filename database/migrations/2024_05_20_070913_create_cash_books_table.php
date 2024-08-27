@@ -17,6 +17,8 @@ return new class extends Migration
             $table->foreignId('user_id');
             $table->foreignId('website_id');
             $table->integer('amount');
+            $table->integer('balance')->default(0);
+            $table->string('note')->default('-');
             $table->string('detail');
             $table->timestamps();
         });

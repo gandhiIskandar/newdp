@@ -62,6 +62,10 @@ class ModalInput extends Component
 
     public function procedTransfer()
     {
+         //hilankan titik pada angka
+
+         $this->form->amount = str_replace('.', '', $this->form->amount);
+
         if (! $this->edit) {
 
             $this->insert();

@@ -54,6 +54,24 @@
         @endif
     </div>
 
+    <div class="col-sm-12">
+        <div class="card">
+            <div class="card-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5>Data Rangkuman Website</h5>
+                </div>
+            </div>
+            <div class="card-body">
+
+              
+                    <livewire:khususon.p-g-web-summary-table />
+                
+               
+                
+            </div>
+        </div>
+    </div>
+
 
     @if (privilegeViewTransaction() && session('website_id') != 5 && session('website_id') != 6)
         <div class="col-sm-12">
@@ -74,9 +92,9 @@
                 </div>
                 <div class="card-body">
 
-
-                    <livewire:p-g-transaction-table />
-
+                    
+                        <livewire:p-g-transaction-table />
+                
                 </div>
             </div>
         </div>

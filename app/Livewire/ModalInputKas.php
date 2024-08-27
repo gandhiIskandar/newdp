@@ -18,6 +18,7 @@ class ModalInputKas extends Component
 
     public function render()
     {
+
         return view('livewire.modal-input-kas');
     }
 

@@ -190,9 +190,9 @@ class ModalInput extends Component
     public function insertTransaction()
     {
         if ($this->exist == 1) {
-            $transaction = $this->form->create($this->member->id);
+            $this->form->create($this->member->id);
         } else {
-            $transaction = $this->form->create();
+            $this->form->create();
         }
 
         // $this->dispatch('reloadPowerGridTransaction');

@@ -11,7 +11,9 @@ use Livewire\Form;
 class ExpForm extends Form
 {
     #[Rule(['required'])]
-    public $amount;
+    public $amount=0;
+
+    public $valueIDR = 0;
 
     #[Rule(['required'])]
     public $detail = '';
@@ -20,7 +22,7 @@ class ExpForm extends Form
     public $account_id = '';
 
     #[Rule(['required'])]
-    public $currency_id = '';
+    public $currency_id = 1;
 
     public function create()
     {
@@ -34,7 +36,7 @@ class ExpForm extends Form
             $expenditure = Expenditure::create([
                 'user_id' => $user->id,
                 'detail' => $this->detail,
-                'amount' => $this->amount,
+                'amount' => $this->valueIDR, //sudah dikalkulasi misal dari btc ke rupiah
                 'account_id' => $this->account_id,
                 'currency_id' => $this->currency_id,
                 'website_id' => session('website_id'),
@@ -54,7 +56,9 @@ class ExpForm extends Form
             insertLog($user->name, request()->ip(), 'Insert Pengeluaran', '-', "$expenditure->detail $formattedAmount", 2);
             
             $this->reduceBalance($this->account_id, $this->amount);
-            $this->reset();
+       
+
+
             
             return $expenditure;
         }

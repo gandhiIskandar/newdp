@@ -18,7 +18,7 @@ class TransactionForm extends Form
     public $amount = 0;
 
     #[Rule(['required'])]
-    public $under_name = 0;
+    public $under_name = "Atas Nama Rekening"; // diisi aja supaya bisa masuk validate ketika input transaksi di user lama
 
     #[Rule(['numeric'])]
     public $member_account_id = 1; // nilai awal adalah 1 karena selected awal ada di id 1
@@ -45,59 +45,59 @@ class TransactionForm extends Form
 
     public function create($user_id = null)
     {
-        // dd(request()->all());
+        if ($this->validate()) {
+            // dd(request()->all());
 
-        //  dd($this->account_id);
+            //  dd($this->account_id);
 
-        //indikator untuk member baru atau lama
-        // jika value = 1 (baru)
-        // jika value = 0 (lama)
-        $new = 0;
+            //indikator untuk member baru atau lama
+            // jika value = 1 (baru)
+            // jika value = 0 (lama)
+            $new = 0;
 
-        if ($user_id == null) {
+            if ($user_id == null) {
 
-            $this->member = $this->createMember($this->username);
+                $this->member = $this->createMember($this->username);
 
-            $user_id = $this->member->id;
-            $member_account = $this->createMemberAccount();
+                $user_id = $this->member->id;
+                $member_account = $this->createMemberAccount();
 
-            //setting member account id dari member account yang baru dibuat karena ini adalah transaksi member baru, ini berlaku jika tipe adalah withdraw
+                //setting member account id dari member account yang baru dibuat karena ini adalah transaksi member baru, ini berlaku jika tipe adalah withdraw
 
-            if ($this->type == 1) {
+                if ($this->type == 1) {
 
-                $this->member_account_id = $member_account->id;
+                    $this->member_account_id = $member_account->id;
+                }
 
+                $new = 1;
             }
 
-            $new = 1;
-        }
+            if ($new == 0) {
+                $this->memberTransactionSum($user_id, $this->amount, $this->type);
+            }
 
-        if ($new == 0) {
-            $this->memberTransactionSum($user_id, $this->amount, $this->type);
-        }
+            $data = [
+                'type_id' => $this->type,
+                'account_id' => $this->account_id, //kalau wd ambil account_id dari data user, kalau depo ambil dari inputan
+                'amount' => $this->amount,
+                'member_id' => $user_id,
+                'website_id' => session('website_id'),
+                'new' => $new,
 
-        $data = [
-            'type_id' => $this->type,
-            'account_id' => $this->account_id, //kalau wd ambil account_id dari data user, kalau depo ambil dari inputan
-            'amount' => $this->amount,
-            'member_id' => $user_id,
-            'website_id' => session('website_id'),
-            'new' => $new,
+            ];
 
-        ];
+            if ($this->type == 2) { // jika tipenya adalah deposit
 
-        if ($this->type == 2) {// jika tipenya adalah deposit
+                $data['bank_id'] = $this->bank_id;
 
-            $data['bank_id'] = $this->bank_id;
+                updateSaldoRekeningAdmin($this->account_id, $this->amount, 'tambah');
+            } else {
 
-            updateSaldoRekeningAdmin($this->account_id, $this->amount, 'tambah');
-        } else {
+                $data['member_account_id'] = $this->member_account_id;
+                updateSaldoRekeningAdmin($this->account_id, $this->amount, 'kurang');
+            }
 
-            $data['member_account_id'] = $this->member_account_id;
-            updateSaldoRekeningAdmin($this->account_id, $this->amount, 'kurang');
-        }
 
-        if ($this->validate()) {
 
             $transaction = Transaction::create($data);
 
@@ -141,7 +141,6 @@ class TransactionForm extends Form
             'under_name' => $this->under_name,
             'number' => $this->account_number,
         ]);
-
     }
 
     public function updateTransaction($transaction)
@@ -174,7 +173,6 @@ class TransactionForm extends Form
                     //lalu kurangi dengan saldo yang baru karena ini adalah withdraw
 
                     updateSaldoRekeningAdmin($this->account_id, $new_amount, 'kurang');
-
                 } else {
 
                     $transaction->member_account_id = null;
@@ -186,9 +184,7 @@ class TransactionForm extends Form
                     //lalu kurangi dengan saldo yang baru karena ini adalah withdraw
 
                     updateSaldoRekeningAdmin($this->account_id, $new_amount, 'tambah');
-
                 }
-
             } else {
 
                 //kurangi dulu dengan jumlah yang lama
@@ -197,7 +193,6 @@ class TransactionForm extends Form
                 if ($transaction->type_id == 1) {
 
                     $ket = 'kurang';
-
                 } else {
                     $ket = 'tambah';
                 }

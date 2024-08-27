@@ -15,8 +15,7 @@
 
 
     @stack('css')
-
-    {{-- @vite(['resources/css/app.css', 'resources/js/app.js']) --}}
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     @livewireStyles
 
     <style>
@@ -136,7 +135,8 @@
     <script src="{{ asset('assets/js/plugins/feather.min.js') }}"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery/latest/jquery.min.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/autonumeric/4.8.1/autoNumeric.min.js"></script>
+
     {{-- data table --}}
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.js"></script>
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.bootstrap5.js"></script>
@@ -180,6 +180,21 @@
 
     <script>
         preset_change(getCookie('preset-color') != "" ? getCookie('preset-color') : 'preset-1');
+    </script>
+
+    <script>
+        $(function() {
+            if ($('.input-currency').length) {
+                new AutoNumeric('.input-currency', {
+                    currencySymbol: '',
+                    decimalCharacter: ',',
+                    decimalPlaces: 0,
+                    allowDecimalPadding: true,
+                    digitGroupSeparator: '.',
+                });
+            }
+
+        });
     </script>
 
 
