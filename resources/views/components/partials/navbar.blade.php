@@ -1,10 +1,9 @@
 <nav class="pc-sidebar">
     <div class="navbar-wrapper">
         <div class="m-header">
-            <a href="../dashboard/index.html" class="b-brand text-primary">
+            <a href="/dashboard" class="b-brand text-primary">
                 <!-- ========   Change your logo from here   ============ -->
-                <img src="../assets/images/logo-white.svg" alt="logo image" class="logo-lg" />
-                <span class="badge bg-primary rounded-pill ms-2 theme-version">v3.1.0</span>
+                <img src="{{ asset('assets/images/188logo.png') }}" alt="logo image" class="logo-lg" style="height:52px; width:178px; object-fit: cover; margin-top:10px;" />
             </a>
         </div>
 

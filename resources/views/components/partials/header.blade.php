@@ -325,7 +325,7 @@
                                     <li class="list-group-item">
                                         <div class="d-flex align-items-center">
                                             <div class="flex-shrink-0">
-                                                <img src="../assets/images/user/avatar-2.jpg" alt="user-image"
+                                                <img src="{{ asset('storage/' . $userNav->profile_image)  }}" alt="user-image"
                                                     class="wid-50 rounded-circle" />
                                             </div>
                                             <div class="flex-grow-1 mx-3">

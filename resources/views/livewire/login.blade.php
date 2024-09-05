@@ -2,7 +2,7 @@
     <div class="bg-overlay bg-white"></div>
     <div class="auth-wrapper">
       <div class="auth-form">
-        <a href="#" class="d-block mt-5"><img src="{{ asset('assets/images/logo-white.svg') }}" alt="img" /></a>
+        <a href="#" class="d-block mt-5"><img src="{{ asset('assets/images/188logo.png') }}" alt="img" /></a>
         <div class="card mb-5 mt-3">
           <div class="card-header bg-dark">
             <h4 class="text-center text-white f-w-500 mb-0">Login with your email</h4>

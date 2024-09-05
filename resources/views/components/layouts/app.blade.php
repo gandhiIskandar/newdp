@@ -185,11 +185,11 @@
     <script>
         $(function() {
             if ($('.input-currency').length) {
+               
                 new AutoNumeric('.input-currency', {
                     currencySymbol: '',
                     decimalCharacter: ',',
                     decimalPlaces: 0,
-                    allowDecimalPadding: true,
                     digitGroupSeparator: '.',
                 });
             }

@@ -54,6 +54,7 @@
         @endif
     </div>
 
+    @if(session('website_id') == 6)
     <div class="col-sm-12">
         <div class="card">
             <div class="card-header">
@@ -71,7 +72,7 @@
             </div>
         </div>
     </div>
-
+@endif
 
     @if (privilegeViewTransaction() && session('website_id') != 5 && session('website_id') != 6)
         <div class="col-sm-12">
