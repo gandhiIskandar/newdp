@@ -86,10 +86,10 @@ class Index extends Component
         $this->finishedTask = [];
     }
 
-    public function getCurrencyAPI($base, $target)
+    public function getCurrencyAPI($base, $target, $key)
     { //default = USD
 
-        $response = Cache::remember('currency',120,function()use($base, $target){
+        $response = Cache::remember($key,120,function()use($base, $target){
            return Http::get("https://api.freecurrencyapi.com/v1/latest?apikey=fca_live_52gDWLXcOQ6eRGarR3sLdQXCg5v2IAyIJj6PoJJb&currencies=$target&base_currency=$base")->json();
         }); 
 
@@ -107,13 +107,15 @@ class Index extends Component
             $btc = $listCoins[0];
             $usdt = $listCoins[2];
 
-            $usd_to_idr = $this->getCurrencyAPI('USD', 'IDR')['data']['IDR'];
+            $usd_to_idr = $this->getCurrencyAPI('USD', 'IDR', 'usd')['data']['IDR'];
 
             $price_btc = $btc['price'] * $usd_to_idr; //usd dikalikan ke rupiah untuk mengetahui harga btc dan usdt
 
             $price_usdt = $usdt['price'] * $usd_to_idr;
 
-            $bath_to_idr = $this->getCurrencyAPI('THB', 'IDR')['data']['IDR'];
+            $bath_to_idr = $this->getCurrencyAPI('THB', 'IDR', 'thb')['data']['IDR'];
+
+          
 
             $data = [
                 (object) [

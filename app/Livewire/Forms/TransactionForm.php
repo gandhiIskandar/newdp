@@ -18,7 +18,7 @@ class TransactionForm extends Form
     public $amount = 0;
 
     #[Rule(['required'])]
-    public $under_name = "Atas Nama Rekening"; // diisi aja supaya bisa masuk validate ketika input transaksi di user lama
+    public $under_name = ""; // diisi aja supaya bisa masuk validate ketika input transaksi di user lama
 
     #[Rule(['numeric'])]
     public $member_account_id = 1; // nilai awal adalah 1 karena selected awal ada di id 1
